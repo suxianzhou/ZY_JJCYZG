@@ -9,48 +9,24 @@
 #import "RWTabBarViewController.h"
 #import "RWMainViewController.h"
 #import "RWInformationViewController.h"
-#import "RWErrorSubjectsController.h"
 #import "RWMoreViewController.h"
+#import "RWSubjectCatalogueController.h"
 
 @interface RWTabBarViewController ()
 
-@property (nonatomic,strong) UIImageView *backBoard;
+@property (nonatomic,strong)UIView *coverLayer;
 
-@property (nonatomic,strong) UIButton *button1;
+@property (nonatomic,strong)NSArray *names;
 
-@property (nonatomic,strong) UIButton *button2;
+@property (nonatomic,strong)NSArray *images;
 
-@property (nonatomic,strong) UIButton *button3;
-
-@property (nonatomic,strong) UIButton *button4;
-
-@property (nonatomic,strong) UILabel *nameLabel1;
-
-@property (nonatomic,strong) UILabel *nameLabel2;
-
-@property (nonatomic,strong) UILabel *nameLabel3;
-
-@property (nonatomic,strong) UILabel *nameLabel4;
-
-@property (nonatomic,assign) CGFloat width;
-
-@property (nonatomic,assign) CGFloat height;
+@property (nonatomic,strong)NSArray *selectImages;
 
 @end
 
 @implementation RWTabBarViewController
 
-@synthesize backBoard;
-@synthesize button1;
-@synthesize button2;
-@synthesize button3;
-@synthesize button4;
-@synthesize nameLabel1;
-@synthesize nameLabel2;
-@synthesize nameLabel3;
-@synthesize nameLabel4;
-@synthesize width;
-@synthesize height;
+@synthesize coverLayer;;
 
 - (void)addHiddenBarObserver
 {
@@ -82,176 +58,91 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
-    self.view.backgroundColor = [UIColor whiteColor];
-    
-    width = self.tabBar.frame.size.width;
-    height = self.tabBar.frame.size.height;
+    [self initResource];
     
     [self compositonViewControllers];
     
-    backBoard = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, width,height)];
-    
-    backBoard.backgroundColor = [UIColor whiteColor];
-    
-    backBoard.userInteractionEnabled = YES;
-    
-    [self.tabBar addSubview:backBoard];
+    [self compositionCoverLayer];
     
     [self compositionButton];
     
     [self addHiddenBarObserver];
+    
     [self addUnhiddenBarObserver];
 }
 
-- (void)compositonViewControllers{
+- (void)initResource
+{
+    _names = @[@"题目练习",@"直播课",@"",@"错题复习",@"更多"];
+    
+    _images = @[[UIImage imageNamed:@"main"],
+                [UIImage imageNamed:@"noti"],
+                [UIImage imageNamed:@"noti"],
+                [UIImage imageNamed:@"error"],
+                [UIImage imageNamed:@"set"]];
+    
+    _selectImages = @[[UIImage imageNamed:@"mian_s"],
+                      [UIImage imageNamed:@"noti_s"],
+                      [UIImage imageNamed:@"noti"],
+                      [UIImage imageNamed:@"error_s"],
+                      [UIImage imageNamed:@"set_s"]];
+}
+
+- (void)compositionCoverLayer
+{
+    self.view.backgroundColor = [UIColor whiteColor];
+    
+    coverLayer = [[UIView alloc] initWithFrame:
+                                    CGRectMake(0, 0, self.tabBar.frame.size.width,
+                                                     self.tabBar.frame.size.height)];
+    
+    [self.tabBar addSubview:coverLayer];
+    
+    coverLayer.backgroundColor = [UIColor whiteColor];
+}
+
+- (void)compositonViewControllers
+{
     
     RWMainViewController *main = [[RWMainViewController alloc]init];
     
     UINavigationController *mainNav = [[UINavigationController alloc]initWithRootViewController:main];
     
+    RWSubjectCatalogueController *catalogue =
+                                        [[RWSubjectCatalogueController alloc]init];
+    
+    UINavigationController *catalogueNav = [[UINavigationController alloc]initWithRootViewController:catalogue];
+    
     RWInformationViewController *information = [[RWInformationViewController alloc]init];
     
     UINavigationController *notiNav = [[UINavigationController alloc]initWithRootViewController:information];
-    
-    RWErrorSubjectsController *error = [[RWErrorSubjectsController alloc]init];
-    
-    UINavigationController *errorNav = [[UINavigationController alloc]initWithRootViewController:error];
     
     RWMoreViewController *more = [[RWMoreViewController alloc]init];
     
     UINavigationController *moreNav = [[UINavigationController alloc]initWithRootViewController:more];
     
     
-    self.viewControllers = @[mainNav,notiNav,errorNav,moreNav];
+    self.viewControllers = @[mainNav,catalogueNav,notiNav,moreNav];
     
 }
 
 - (void)compositionButton
 {
+    CGFloat w = self.tabBar.frame.size.width / 5;
     
-    NSArray *nameArr = @[@"题目练习",@"直播课",@"错题复习",@"更多"];
+    CGFloat h = self.tabBar.frame.size.height;
     
-    NSArray *images = @[[UIImage imageNamed:@"main"],
-                        [UIImage imageNamed:@"noti"],
-                        [UIImage imageNamed:@"error"],
-                        [UIImage imageNamed:@"set"]];
-    
-    NSArray *selectImages = @[[UIImage imageNamed:@"mian_s"],
-                              [UIImage imageNamed:@"noti_s"],
-                              [UIImage imageNamed:@"error_s"],
-                              [UIImage imageNamed:@"set_s"]];
-
-    
-    for (int i = 1; i <= 4; i++)
+    for (int i = 0; i < 5; i++)
     {
-        UIView *view = [[UIView alloc]initWithFrame:
-                                    CGRectMake(self.view.frame.size.width/4*(i-1), 0,
-                                               self.view.frame.size.width/4,
-                                               backBoard.frame.size.height)];
-        
-        view.backgroundColor = [UIColor clearColor];
-        view.tag = 1000 + i;
-        
-        [backBoard addSubview:view];
-        
-        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(attachClick:)];
-        tap.numberOfTapsRequired = 1;
-        [view addGestureRecognizer:tap];
-        
-        UIButton *btn = [self valueForKey:[NSString stringWithFormat:@"button%d",i]];
-        
-        btn = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, 25, 24)];
-        
-        btn.center = CGPointMake(width/4/2+width/4*(i-1), 24/2+6);
-        
-        [backBoard addSubview:btn];
-        
-        [btn setBackgroundImage:images[i-1] forState:UIControlStateNormal];
-        [btn setBackgroundImage:selectImages[i-1] forState:UIControlStateSelected];
-        
-        btn.tag = i+10;
-        
-        [btn addTarget:self action:@selector(btnClick:) forControlEvents:UIControlEventTouchUpInside];
-        
-        
-        btn.backgroundColor = [UIColor clearColor];
-        
-        UILabel *nameL = [self valueForKey:[NSString stringWithFormat:@"nameLabel%d",i]];
-        
-        nameL = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 40, height-30)];
-        
-        nameL.center = CGPointMake(width/4/2+width/4*(i-1), height-(height-30)/2);
-        
-        [backBoard addSubview:nameL];
-        
-        nameL.text = nameArr[i-1];
-        
-        nameL.textColor = [UIColor grayColor];
-        
-        nameL.font = [UIFont systemFontOfSize:10];
-        
-        nameL.textAlignment = NSTextAlignmentCenter;
-        
-        nameL.tag = 100+i;
-        
-        nameL.backgroundColor = [UIColor clearColor];
-        
-        if (i == 1)
+        if (i == 2)
         {
-            btn.selected = YES;
-            
-            nameL.textColor = MAIN_COLOR;
+            continue;
         }
         
-    }
-}
-
-- (void)btnClick:(UIButton *)btn
-{
-    
-    for (int i = 1; i <= 4; i++)
-    {
-        UIButton *btnX = (UIButton *)[self.view viewWithTag:i+10];
-        
-        btnX.selected = NO;
-        
-        UILabel *nameX = (UILabel *)[self.view viewWithTag:i+100];
-        
-        nameX.textColor = [UIColor grayColor];
+        [self tabBarButtonWithFrame:CGRectMake(w * i, 0, w, h) AndTag:i+1];
     }
     
-    btn.selected = YES;
-    
-    UILabel *name = [self.view viewWithTag:100+btn.tag-10];
-    
-    name.textColor = MAIN_COLOR;
-    
-    self.selectedIndex = btn.tag - 1-10;
-}
-
-- (void)attachClick:(UITapGestureRecognizer *)tap
-{
-    
-    for (int i = 1; i <= 4; i++)
-    {
-        UIButton *btnX = (UIButton *)[self.view viewWithTag:i+10];
-        
-        btnX.selected = NO;
-        
-        UILabel *nameX = (UILabel *)[self.view viewWithTag:i+100];
-        
-        nameX.textColor = [UIColor grayColor];
-    }
-    
-    UIButton *selectBtn = [self.view viewWithTag:tap.view.tag-1000+10];
-    
-    selectBtn.selected = YES;
-    
-    UILabel *nameLabel = [self.view viewWithTag:tap.view.tag-1000+100];
-    
-    nameLabel.textColor = MAIN_COLOR;
-    
-    self.selectedIndex = tap.view.tag-1000-1;
+    [self selectWithTag:1];
 }
 
 - (void)toRootViewController
@@ -267,13 +158,112 @@
         nameX.textColor = [UIColor grayColor];
     }
     
-    button1.selected = YES;
-    
-    nameLabel1.textColor = MAIN_COLOR;
+    [self selectWithTag:1];
     
     self.selectedIndex = 0;
 }
 
+- (UIView *)tabBarButtonWithFrame:(CGRect)frame AndTag:(NSInteger)tag
+{
+    UIView *view = [[UIView alloc] initWithFrame:frame];
+    
+    view.tag = tag;
+    
+    [coverLayer addSubview:view];
+    
+    UIImageView *imageView = [[UIImageView alloc] init];
+    
+    imageView.tag = tag * 10;
+    
+    imageView.image = _images[tag-1];
+    
+    [view addSubview:imageView];
+    
+    [imageView mas_makeConstraints:^(MASConstraintMaker *make) {
+       
+        make.top.equalTo(view.mas_top).offset(2);
+        make.width.equalTo(@(30));
+        make.height.equalTo(@(30));
+        make.centerX.equalTo(view.mas_centerX).offset(0);
+    }];
+    
+    UILabel *nameLabel = [[UILabel alloc] init];
+    
+    nameLabel.text = _names[tag-1];
+    
+    nameLabel.tag = tag * 100;
+    
+    nameLabel.textAlignment = NSTextAlignmentCenter;
+    
+    nameLabel.font = [UIFont systemFontOfSize:10];
+    
+    nameLabel.textColor = [UIColor grayColor];
+    
+    [view addSubview:nameLabel];
+    
+    [nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        
+        make.top.equalTo(imageView.mas_bottom).offset(0);
+        make.left.equalTo(view.mas_left).offset(0);
+        make.right.equalTo(view.mas_right).offset(0);
+        make.bottom.equalTo(view.mas_bottom).offset(-3);
+    }];
+    
+    [self addGestureRecognizerToView:view];
+    
+    return view;
+}
+
+- (void)addGestureRecognizerToView:(UIView *)view
+{
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(cutViewControllerWithGesture:)];
+    
+    tap.numberOfTapsRequired = 1;
+    
+    [view addGestureRecognizer:tap];
+}
+
+- (void)cutViewControllerWithGesture:(UITapGestureRecognizer *)tapGesture
+{
+    for (int i = 0; i < 5; i++)
+    {
+        if (i == 2)
+        {
+            continue;
+        }
+        
+        UIImageView *imageItem = (UIImageView *)[self.view viewWithTag:(i + 1)*10];
+        
+        imageItem.image = _images[i];
+        
+        UILabel *nameX = (UILabel *)[self.view viewWithTag:(i + 1)*100];
+        
+        nameX.textColor = [UIColor grayColor];
+    }
+    
+    [self selectWithTag:tapGesture.view.tag];
+}
+
+- (void)selectWithTag:(NSInteger)tag
+{
+    UIImageView *imageItem =
+                    (UIImageView *)[self.view viewWithTag:tag * 10];
+    
+    imageItem.image = _selectImages[tag - 1];
+    
+    UILabel *nameLabel = [self.view viewWithTag:tag * 100];
+    
+    nameLabel.textColor = MAIN_COLOR;
+    
+    if (tag < 3)
+    {
+        self.selectedIndex = tag - 1;
+    }
+    else if (tag > 3)
+    {
+        self.selectedIndex = tag - 2;
+    }
+}
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

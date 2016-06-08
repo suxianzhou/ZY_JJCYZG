@@ -182,7 +182,7 @@
     {
         [self openDrawer];
         
-        self.subjectHubList.userInteractionEnabled = NO;
+//        self.subjectHubList.userInteractionEnabled = NO;
         
         if (self.reloadData)
         {
@@ -193,7 +193,7 @@
     {
         [self closeDrawer];
         
-        self.subjectHubList.userInteractionEnabled = YES;
+//        self.subjectHubList.userInteractionEnabled = YES;
     }
 }
 
@@ -259,7 +259,7 @@
         drawerPt.x = 0;
         [self animateOfDrawer:drawerPt];
         
-        self.subjectHubList.userInteractionEnabled = YES;
+//        self.subjectHubList.userInteractionEnabled = YES;
     }
 }
 
