@@ -26,7 +26,7 @@
 
 @implementation RWTabBarViewController
 
-@synthesize coverLayer;;
+@synthesize coverLayer;
 
 - (void)addHiddenBarObserver
 {
@@ -143,6 +143,46 @@
     }
     
     [self selectWithTag:1];
+    
+    UIView *community = [[UIView alloc] initWithFrame:CGRectMake(0, 0, h, h)];
+    
+    community.center = CGPointMake(self.tabBar.frame.size.width / 2, h /2);
+    
+    community.tag = 3;
+    
+    [coverLayer addSubview:community];
+    
+    UIImageView *communityLogo = [[UIImageView alloc] init];
+    
+    [community addSubview:communityLogo];
+    
+    [communityLogo mas_makeConstraints:^(MASConstraintMaker *make) {
+       
+        make.left.equalTo(community.mas_left).offset(5);
+        make.right.equalTo(community.mas_right).offset(-5);
+        make.bottom.equalTo(community.mas_bottom).offset(-5);
+        make.top.equalTo(community.mas_top).offset(5);
+    }];
+    
+    communityLogo.image = [UIImage imageNamed:@"communityHome"];
+    
+    communityLogo.layer.shadowColor = [[UIColor blackColor] CGColor];
+    communityLogo.layer.shadowOffset = CGSizeMake(0, 0);
+    communityLogo.layer.shadowRadius = 2;
+    communityLogo.layer.shadowOpacity = 1;
+    
+    community.layer.borderWidth = 3;
+    community.layer.borderColor = [[UIColor whiteColor] CGColor];
+    community.layer.shadowColor = [[UIColor blackColor] CGColor];
+    community.layer.shadowOffset = CGSizeMake(10, 10);
+    community.layer.shadowRadius = 10;
+    community.layer.shadowOpacity = 1;
+//    community.layer.masksToBounds = YES;
+    community.backgroundColor = MAIN_COLOR;
+    
+    community.layer.cornerRadius = self.tabBar.frame.size.height / 2;
+    
+    community.clipsToBounds = YES;
 }
 
 - (void)toRootViewController
