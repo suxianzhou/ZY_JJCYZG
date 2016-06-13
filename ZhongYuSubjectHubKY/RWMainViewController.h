@@ -11,6 +11,7 @@
 #import "RWRequsetManager.h"
 #import "RWWebViewController.h"
 #import "RWCountDownView.h"
+#import <WebKit/WebKit.h>
 
 @interface RWMainViewController : UIViewController
 
@@ -19,11 +20,11 @@
     RWCountDownViewDelegate
 >
 
+@property (nonatomic,strong)WKWebView *informationView;
+
 @property (nonatomic,strong)RWDeployManager *deployManager;
 
 @property (nonatomic,strong)RWRequsetManager *requestManager;
-
-@property (nonatomic,strong)UITableView *subjectHubList;
 
 @property (nonatomic,strong)RWDrawerView *drawerView;
 
