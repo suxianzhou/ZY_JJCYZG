@@ -73,18 +73,18 @@
 
 - (void)initResource
 {
-    _names = @[@"题目练习",@"直播课",@"",@"错题复习",@"更多"];
+    _names = @[@"题目练习",@"错题复习",@"",@"直播课",@"更多"];
     
     _images = @[[UIImage imageNamed:@"main"],
-                [UIImage imageNamed:@"noti"],
-                [UIImage imageNamed:@"noti"],
                 [UIImage imageNamed:@"error"],
+                [UIImage imageNamed:@"noti"],
+                [UIImage imageNamed:@"noti"],
                 [UIImage imageNamed:@"set"]];
     
     _selectImages = @[[UIImage imageNamed:@"mian_s"],
-                      [UIImage imageNamed:@"noti_s"],
-                      [UIImage imageNamed:@"noti"],
                       [UIImage imageNamed:@"error_s"],
+                      [UIImage imageNamed:@"noti"],
+                      [UIImage imageNamed:@"noti_s"],
                       [UIImage imageNamed:@"set_s"]];
 }
 
@@ -177,7 +177,7 @@
     community.layer.shadowOffset = CGSizeMake(10, 10);
     community.layer.shadowRadius = 10;
     community.layer.shadowOpacity = 1;
-//    community.layer.masksToBounds = YES;
+    community.layer.masksToBounds = YES;
     community.backgroundColor = MAIN_COLOR;
     
     community.layer.cornerRadius = self.tabBar.frame.size.height / 2;

@@ -10,4 +10,8 @@
 
 @interface RWSubjectCatalogueController : UIViewController
 
+- (void)initSegmentedControl;
+
+- (void)releaseSegmentedControl;
+
 @end

@@ -40,7 +40,6 @@ static NSString *const classList = @"classList";
     self.tabBarController.tabBar.translucent = NO;
     self.navigationController.navigationBar.titleTextAttributes = @{NSForegroundColorAttributeName: [UIColor whiteColor]};
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
-    
     sujectClasses = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, 0, 0) style:UITableViewStylePlain];
     
     [self.view addSubview:sujectClasses];

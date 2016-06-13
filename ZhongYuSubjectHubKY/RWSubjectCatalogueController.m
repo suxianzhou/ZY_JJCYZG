@@ -13,6 +13,7 @@
 #import <SVProgressHUD.h>
 #import "RWAnswerViewController.h"
 #import "RWRequsetManager.h"
+#import "RWErrorSubjectsController.h"
 
 @interface RWSubjectCatalogueController ()
 
@@ -60,21 +61,63 @@ static NSString *const hubList = @"hunList";
     
     self.navigationController.navigationBar.titleTextAttributes = @{NSForegroundColorAttributeName:[UIColor whiteColor]};
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
-    
-    [self initSegmentedControl];
 }
 
 - (void)initSegmentedControl
 {
-    UISegmentedControl *segmented =
-                [[UISegmentedControl alloc] initWithItems:@[@"题目练习",@"错题记录"]];
+    UISegmentedControl *segmented = (UISegmentedControl *)[self.navigationController.view viewWithTag:30];
+    
+    if (segmented)
+    {
+        return;
+    }
+    
+    segmented = [[UISegmentedControl alloc] initWithItems:@[@"题目练习",@"错题记录"]];
+    
+    segmented.tag = 30;
     
     segmented.frame = CGRectMake(0, 0, 200.0, 30.0);
     segmented.center = CGPointMake(self.navigationController.navigationBar.frame.size.width / 2, self.navigationController.navigationBar.frame.size.height /2);
     segmented.selectedSegmentIndex = 2;
     segmented.tintColor = [UIColor whiteColor];
     
+    segmented.selectedSegmentIndex = 0;
+    
+    [segmented addTarget:self action:@selector(segmentedClick:) forControlEvents:UIControlEventValueChanged];
+    
     [self.navigationController.navigationBar addSubview:segmented];
+}
+
+-(void)segmentedClick:(UISegmentedControl *)segmented
+{
+    if (segmented.selectedSegmentIndex == 0)
+    {
+        id controller = [self.navigationController.viewControllers lastObject];
+        
+        if ([controller isKindOfClass:[RWErrorSubjectsController class]])
+        {
+            [self.navigationController popViewControllerAnimated:YES];
+        }
+    }
+    else
+    {
+        id controller = [self.navigationController.viewControllers lastObject];
+        
+        if ([controller isKindOfClass:[self class]])
+        {
+            RWErrorSubjectsController *errorController =
+                                            [[RWErrorSubjectsController alloc] init];
+            
+            [self.navigationController pushViewController:errorController
+                                                 animated:YES];
+        }
+    }
+}
+- (void)releaseSegmentedControl
+{
+    UISegmentedControl *segmented = (UISegmentedControl *)[self.navigationController.view viewWithTag:30];
+    
+    [segmented removeFromSuperview];
 }
 
 #pragma mark - Version > iOS 8_0
@@ -302,6 +345,8 @@ static NSString *const hubList = @"hunList";
         
         choose.classSource = [baseManager obtainIndexNameWithHub:selectTitle];
         
+        [self releaseSegmentedControl];
+        
         [self.navigationController pushViewController:choose animated:YES];
         
         [SVProgressHUD dismiss];
@@ -317,6 +362,8 @@ static NSString *const hubList = @"hunList";
     choose.classSource = subjectHubs;
     
     [SVProgressHUD dismiss];
+    
+    [self releaseSegmentedControl];
     
     [self.navigationController pushViewController:choose animated:YES];
 }
@@ -357,6 +404,8 @@ static NSString *const hubList = @"hunList";
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
+    
+    [self initSegmentedControl];
     
     if (!subjectClassSource) {
         
