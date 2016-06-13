@@ -28,6 +28,24 @@
 
 @synthesize coverLayer;
 
+- (void)toRootViewController
+{
+    for (int i = 1; i <= 4; i++)
+    {
+        UIButton *btn = (UIButton *)[self.view viewWithTag:i+10];
+        
+        btn.selected = NO;
+        
+        UILabel *name = (UILabel *)[self.view viewWithTag:i+100];
+        
+        name.textColor = [UIColor grayColor];
+    }
+    
+    [self selectWithTag:1];
+    
+    self.selectedIndex = 0;
+}
+
 - (void)addHiddenBarObserver
 {
     [[NSNotificationCenter defaultCenter] addObserverForName:HIDDEN_NOTIFICATION
@@ -152,6 +170,8 @@
     
     [coverLayer addSubview:community];
     
+    [self viewAddTapGesture:community];
+    
     UIImageView *communityLogo = [[UIImageView alloc] init];
     
     [community addSubview:communityLogo];
@@ -185,22 +205,18 @@
     community.clipsToBounds = YES;
 }
 
-- (void)toRootViewController
+- (void)viewAddTapGesture:(UIView *)view
 {
-    for (int i = 1; i <= 4; i++)
-    {
-        UIButton *btnX = (UIButton *)[self.view viewWithTag:i+10];
-        
-        btnX.selected = NO;
-        
-        UILabel *nameX = (UILabel *)[self.view viewWithTag:i+100];
-        
-        nameX.textColor = [UIColor grayColor];
-    }
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(toCommunityViewController)];
     
-    [self selectWithTag:1];
+    tap.numberOfTapsRequired = 1;
     
-    self.selectedIndex = 0;
+    [view addGestureRecognizer:tap];
+}
+
+- (void)toCommunityViewController
+{
+    NSLog(@"%s",__FUNCTION__);
 }
 
 - (UIView *)tabBarButtonWithFrame:(CGRect)frame AndTag:(NSInteger)tag

@@ -14,6 +14,7 @@
 #import "RWAnswerViewController.h"
 #import "RWRequsetManager.h"
 #import "RWErrorSubjectsController.h"
+#import "RWProgressCell.h"
 
 @interface RWSubjectCatalogueController ()
 
@@ -43,6 +44,8 @@
 @end
 
 static NSString *const hubList = @"hunList";
+
+static NSString *const progressCell = @"ProgressCell";
 
 @implementation RWSubjectCatalogueController
 
@@ -81,7 +84,15 @@ static NSString *const hubList = @"hunList";
     segmented.selectedSegmentIndex = 2;
     segmented.tintColor = [UIColor whiteColor];
     
-    segmented.selectedSegmentIndex = 0;
+    if ([[self.navigationController.viewControllers lastObject]
+                                                        isKindOfClass:[self class]])
+    {
+        segmented.selectedSegmentIndex = 0;
+    }
+    else
+    {
+        segmented.selectedSegmentIndex = 1;
+    }
     
     [segmented addTarget:self action:@selector(segmentedClick:) forControlEvents:UIControlEventValueChanged];
     
@@ -256,30 +267,76 @@ static NSString *const hubList = @"hunList";
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-
-    RWSubjectHubListCell *cell = [tableView dequeueReusableCellWithIdentifier:hubList forIndexPath:indexPath];
-        
-    cell.title = [subjectSource[indexPath.section][indexPath.row] valueForKey:@"title"];
-        
-    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-        
-    cell.selectionStyle = UITableViewCellSelectionStyleNone;
-        
+    
     if ([baseManager isExistHubWithHubName:[subjectSource[indexPath.section][indexPath.row] valueForKey:@"title"]])
     {
-        cell.downLoadState = @"已下载";
-    }
-        else
-        {
-            cell.downLoadState = @"未下载";
-        }
+        RWProgressCell *cell = [tableView dequeueReusableCellWithIdentifier:progressCell forIndexPath:indexPath];
+        
+        cell.name = [subjectSource[indexPath.section][indexPath.row] valueForKey:@"title"];
+        
+        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        
+        cell.fraction = [self fractionWithRow:indexPath.row
+                                      Section:indexPath.section];
         
         return cell;
+    }
+    else
+    {
+        RWSubjectHubListCell *cell = [tableView dequeueReusableCellWithIdentifier:hubList forIndexPath:indexPath];
+        
+        cell.title = [subjectSource[indexPath.section][indexPath.row] valueForKey:@"title"];
+        
+        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        
+        cell.downLoadState = @"未下载";
+        
+        return cell;
+    }
+}
+
+- (NSString *)fractionWithRow:(NSInteger)row Section:(NSInteger)section
+{
+    NSString *name = [subjectSource[section][row] valueForKey:@"title"];
+    
+    NSArray *items = [baseManager obtainIndexNameWithHub:name];
+    
+    unsigned int makes = 0,counts = 0;
+    
+    for (int i = 0; i < items.count; i++)
+    {
+        RWSubjectClassModel *item = items[i];
+        
+        NSString *itemfra = [baseManager toSubjectsWithIndexName:item.subjectclass
+                                                      AndHubName:item.hub
+                                                            Type:RWToNumberForString];
+        
+        NSArray *arr = [itemfra componentsSeparatedByString:@"/"];
+        
+        if (arr.count != 2)
+        {
+            return nil;
+        }
+        
+        makes += [arr[0] intValue];
+        counts += [arr[1] intValue];
+    }
+    
+    return [NSString stringWithFormat:@"%d/%d",makes,counts];
 }
 
 #pragma mark - UITableViewDelegate
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    if ([baseManager isExistHubWithHubName:[subjectSource[indexPath.section][indexPath.row] valueForKey:@"title"]])
+    {
+        return 80;
+    }
     
     return 50;
 }
@@ -398,7 +455,11 @@ static NSString *const hubList = @"hunList";
     subjectHubList.delegate   = self;
     subjectHubList.dataSource = self;
     
-    [subjectHubList registerClass:[RWSubjectHubListCell class] forCellReuseIdentifier:hubList];
+    [subjectHubList registerClass:[RWSubjectHubListCell class]
+           forCellReuseIdentifier:hubList];
+    
+    [subjectHubList registerClass:[RWProgressCell class]
+           forCellReuseIdentifier:progressCell];
 }
 
 - (void)viewDidAppear:(BOOL)animated

@@ -182,7 +182,7 @@
     {
         [self openDrawer];
         
-//        self.subjectHubList.userInteractionEnabled = NO;
+        self.informationView.userInteractionEnabled = NO;
         
         if (self.reloadData)
         {
@@ -193,7 +193,7 @@
     {
         [self closeDrawer];
         
-//        self.subjectHubList.userInteractionEnabled = YES;
+        self.informationView.userInteractionEnabled = YES;
     }
 }
 
@@ -248,6 +248,8 @@
         CGPoint viewPt = self.tabBarController.view.center;
         viewPt.x = self.tabBarController.view.frame.size.width * 1.15;
         [self animateOfView:viewPt];
+        
+        self.informationView.userInteractionEnabled = NO;
     }
     else
     {
@@ -259,7 +261,7 @@
         drawerPt.x = 0;
         [self animateOfDrawer:drawerPt];
         
-//        self.subjectHubList.userInteractionEnabled = YES;
+        self.informationView.userInteractionEnabled = YES;
     }
 }
 
@@ -300,8 +302,7 @@
     
     [RWRequsetManager warningToViewController:self
                                         Title:@"网络连接失败,请检查网络"
-                                        Click:^{
-                                        }];
+                                        Click:^{}];
 }
 
 - (void)toAboutUsViewController

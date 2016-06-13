@@ -245,18 +245,18 @@ static NSString *const classListCell = @"classListCell";
             
             if (error)
             {
-                [RWRequsetManager warningToViewController:self Title:@"网络请求失败，请检查网络" Click:^{
-                    
-                }];
+                [RWRequsetManager warningToViewController:self
+                                                    Title:@"网络请求失败，请检查网络"
+                                                    Click:nil];
                 
                 return ;
             }
             
             if (!isSucceed)
             {
-                [RWRequsetManager warningToViewController:self Title:reason Click:^{
-                    
-                }];
+                [RWRequsetManager warningToViewController:self
+                                                    Title:reason
+                                                    Click:nil];
             }
             else
             {
@@ -281,6 +281,25 @@ static NSString *const classListCell = @"classListCell";
                 }
                 
                 classListCell.didAppointment = YES;
+                
+                UIAlertController *alert =
+                    [UIAlertController alertControllerWithTitle:@"友情提示"
+                                                        message:@"微信：\n电话："
+                                                 preferredStyle:UIAlertControllerStyleAlert];
+                
+                UIAlertAction *call = [UIAlertAction actionWithTitle:@"立即拨打" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
+                    
+                }];
+                
+                UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+                    
+                }];
+                
+                [alert addAction:call];
+                
+                [alert addAction:cancel];
+                
+                [self presentViewController:alert animated:YES completion:nil];
             }
         }];
         
