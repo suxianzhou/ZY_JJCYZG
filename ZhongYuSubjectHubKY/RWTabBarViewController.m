@@ -11,7 +11,7 @@
 #import "RWInformationViewController.h"
 #import "RWMoreViewController.h"
 #import "RWSubjectCatalogueController.h"
-
+#import "UMCommunity.h"
 @interface RWTabBarViewController ()
 
 @property (nonatomic,strong)UIView *coverLayer;
@@ -217,6 +217,9 @@
 - (void)toCommunityViewController
 {
     NSLog(@"%s",__FUNCTION__);
+    UIViewController *communityController = [UMCommunity getFeedsModalViewController];
+    [self presentViewController:communityController animated:YES completion:nil];
+
 }
 
 - (UIView *)tabBarButtonWithFrame:(CGRect)frame AndTag:(NSInteger)tag

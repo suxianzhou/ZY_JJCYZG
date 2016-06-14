@@ -13,7 +13,11 @@
 #import "MobClick.h"
 #import <SMS_SDK/SMSSDK.h>
 #import <SMS_SDK/Extend/SMSSDK+AddressBookMethods.h>
+#import "UMCommunity.h"
 
+
+#define UMengCommunityAppkey @"57316e8167e58e28c4000286" //test
+#define UMengCommunityAppSecret @"2513ee6b3bd2867c727b7134c6891c42"
 @interface AppDelegate ()
 
 @end
@@ -51,6 +55,9 @@ static NSString *const baseName = @"ZhongYuSubjuectHub";
 
 - (void)registerVendorsWithLaunchOptions:(NSDictionary *) launchOptions
 {
+    //UMCommunity
+    
+    [UMCommunity setAppKey:UMengCommunityAppkey withAppSecret:UMengCommunityAppSecret];
     //MobSMS
     [SMSSDK registerApp:@"1341ca2111fcc"
              withSecret:@"6a4f67f79a43f2ddc6e573e4d540e6dd"];
