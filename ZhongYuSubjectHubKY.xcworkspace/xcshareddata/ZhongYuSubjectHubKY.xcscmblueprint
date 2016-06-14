@@ -19,7 +19,11 @@
   "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "ZhongYuSubjectHubKY.xcworkspace",
   "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
     {
+<<<<<<< HEAD
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/suxianzhou\/ZY_JJCYZG.git",
+=======
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/RyeWhiskeyBourbon\/ZY_JJCYZG.git",
+>>>>>>> RyeWhiskeyBourbon/master
       "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "C5B6CBC9F3A1312636348B630C454857A60A9A5A"
     },
