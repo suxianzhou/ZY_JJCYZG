@@ -28,6 +28,24 @@
 
 @synthesize coverLayer;
 
+- (void)toRootViewController
+{
+    for (int i = 1; i <= 4; i++)
+    {
+        UIButton *btn = (UIButton *)[self.view viewWithTag:i+10];
+        
+        btn.selected = NO;
+        
+        UILabel *name = (UILabel *)[self.view viewWithTag:i+100];
+        
+        name.textColor = [UIColor grayColor];
+    }
+    
+    [self selectWithTag:1];
+    
+    self.selectedIndex = 0;
+}
+
 - (void)addHiddenBarObserver
 {
     [[NSNotificationCenter defaultCenter] addObserverForName:HIDDEN_NOTIFICATION
@@ -73,18 +91,18 @@
 
 - (void)initResource
 {
-    _names = @[@"题目练习",@"直播课",@"",@"错题复习",@"更多"];
+    _names = @[@"题目练习",@"错题复习",@"",@"直播课",@"更多"];
     
     _images = @[[UIImage imageNamed:@"main"],
-                [UIImage imageNamed:@"noti"],
-                [UIImage imageNamed:@"noti"],
                 [UIImage imageNamed:@"error"],
+                [UIImage imageNamed:@"noti"],
+                [UIImage imageNamed:@"noti"],
                 [UIImage imageNamed:@"set"]];
     
     _selectImages = @[[UIImage imageNamed:@"mian_s"],
-                      [UIImage imageNamed:@"noti_s"],
-                      [UIImage imageNamed:@"noti"],
                       [UIImage imageNamed:@"error_s"],
+                      [UIImage imageNamed:@"noti"],
+                      [UIImage imageNamed:@"noti_s"],
                       [UIImage imageNamed:@"set_s"]];
 }
 
@@ -152,6 +170,8 @@
     
     [coverLayer addSubview:community];
     
+    [self viewAddTapGesture:community];
+    
     UIImageView *communityLogo = [[UIImageView alloc] init];
     
     [community addSubview:communityLogo];
@@ -177,7 +197,7 @@
     community.layer.shadowOffset = CGSizeMake(10, 10);
     community.layer.shadowRadius = 10;
     community.layer.shadowOpacity = 1;
-//    community.layer.masksToBounds = YES;
+    community.layer.masksToBounds = YES;
     community.backgroundColor = MAIN_COLOR;
     
     community.layer.cornerRadius = self.tabBar.frame.size.height / 2;
@@ -185,22 +205,18 @@
     community.clipsToBounds = YES;
 }
 
-- (void)toRootViewController
+- (void)viewAddTapGesture:(UIView *)view
 {
-    for (int i = 1; i <= 4; i++)
-    {
-        UIButton *btnX = (UIButton *)[self.view viewWithTag:i+10];
-        
-        btnX.selected = NO;
-        
-        UILabel *nameX = (UILabel *)[self.view viewWithTag:i+100];
-        
-        nameX.textColor = [UIColor grayColor];
-    }
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(toCommunityViewController)];
     
-    [self selectWithTag:1];
+    tap.numberOfTapsRequired = 1;
     
-    self.selectedIndex = 0;
+    [view addGestureRecognizer:tap];
+}
+
+- (void)toCommunityViewController
+{
+    NSLog(@"%s",__FUNCTION__);
 }
 
 - (UIView *)tabBarButtonWithFrame:(CGRect)frame AndTag:(NSInteger)tag

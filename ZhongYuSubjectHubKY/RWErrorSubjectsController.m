@@ -7,6 +7,7 @@
 //
 
 #import "RWErrorSubjectsController.h"
+#import "RWSubjectCatalogueController.h"
 #import "RWDataBaseManager.h"
 #import "RWSubjectHubListCell.h"
 #import "RWRegisterNowView.h"
@@ -99,11 +100,7 @@ static NSString *const wrongListCell = @"wrongListCell";
     self.navigationController.navigationBar.titleTextAttributes = @{NSForegroundColorAttributeName: [UIColor whiteColor]};
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
     
-    if (self.delegate == nil)
-    {
-        self.navigationItem.title = @"错题记录";
-    }
-    else
+    if (_delegate)
     {
         self.navigationItem.title = @"收藏";
         
@@ -139,6 +136,11 @@ static NSString *const wrongListCell = @"wrongListCell";
     if (registerView)
     {
         [registerView removeFromSuperview];
+    }
+    
+    if (!_delegate)
+    {
+        [self SegmentedHidden:NO];
     }
     
     [self obtainCollectSource];
@@ -254,6 +256,8 @@ static NSString *const wrongListCell = @"wrongListCell";
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    [self SegmentedHidden:YES];
+    
     NSArray *subjects = [[subjectsSource objectForKey:classHeader[indexPath.section]] objectForKey:wrongSource[indexPath.section][indexPath.row]];
     
     RWAnswerViewController *answer = [[RWAnswerViewController alloc]init];
@@ -291,6 +295,23 @@ static NSString *const wrongListCell = @"wrongListCell";
     }
     
     [self obtainCollectSource];
+}
+
+- (void)SegmentedHidden:(BOOL)hidden
+{
+    NSArray *viewControllers = self.navigationController.viewControllers;
+    
+    RWSubjectCatalogueController *subjectCatalogue =
+                                        viewControllers[viewControllers.count - 2];
+    
+    if (hidden)
+    {
+        [subjectCatalogue releaseSegmentedControl];
+    }
+    else
+    {
+        [subjectCatalogue initSegmentedControl];
+    }
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath

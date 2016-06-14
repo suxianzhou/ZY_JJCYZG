@@ -91,6 +91,7 @@
 		12BA9EB71CE60FC7004B5C77 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 12BA9EB61CE60FC7004B5C77 /* AudioToolbox.framework */; };
 		12BA9EB91CE614AA004B5C77 /* ClockSound.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 12BA9EB81CE614AA004B5C77 /* ClockSound.mp3 */; };
 		12BCD7E61D0E42A0008DA5DC /* communityHome.png in Resources */ = {isa = PBXBuildFile; fileRef = 12BCD7E51D0E42A0008DA5DC /* communityHome.png */; };
+		12BCD7E91D0EA93B008DA5DC /* RWProgressCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 12BCD7E81D0EA93B008DA5DC /* RWProgressCell.m */; };
 		12D1C95A1CF6E7D50082F638 /* RWMainViewController+CountDownView.m in Sources */ = {isa = PBXBuildFile; fileRef = 12D1C9591CF6E7D50082F638 /* RWMainViewController+CountDownView.m */; };
 		12D1C95D1CF6E9060082F638 /* RWCountDownView.m in Sources */ = {isa = PBXBuildFile; fileRef = 12D1C95C1CF6E9060082F638 /* RWCountDownView.m */; };
 		12D1C9611CF6F7F50082F638 /* countDownback.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 12D1C9601CF6F7F50082F638 /* countDownback.jpg */; };
@@ -334,6 +335,8 @@
 		12BA9EB61CE60FC7004B5C77 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		12BA9EB81CE614AA004B5C77 /* ClockSound.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = ClockSound.mp3; sourceTree = "<group>"; };
 		12BCD7E51D0E42A0008DA5DC /* communityHome.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = communityHome.png; sourceTree = "<group>"; };
+		12BCD7E71D0EA93B008DA5DC /* RWProgressCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RWProgressCell.h; sourceTree = "<group>"; };
+		12BCD7E81D0EA93B008DA5DC /* RWProgressCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RWProgressCell.m; sourceTree = "<group>"; };
 		12D1C9581CF6E7D50082F638 /* RWMainViewController+CountDownView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "RWMainViewController+CountDownView.h"; sourceTree = "<group>"; };
 		12D1C9591CF6E7D50082F638 /* RWMainViewController+CountDownView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "RWMainViewController+CountDownView.m"; sourceTree = "<group>"; };
 		12D1C95B1CF6E9060082F638 /* RWCountDownView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RWCountDownView.h; sourceTree = "<group>"; };
@@ -843,6 +846,15 @@
 			name = RWBanners;
 			sourceTree = "<group>";
 		};
+		12BCD7EA1D0EE7E2008DA5DC /* View */ = {
+			isa = PBXGroup;
+			children = (
+				12BCD7E71D0EA93B008DA5DC /* RWProgressCell.h */,
+				12BCD7E81D0EA93B008DA5DC /* RWProgressCell.m */,
+			);
+			name = View;
+			sourceTree = "<group>";
+		};
 		12EB5EB31CEFEF870081F46B /* lib */ = {
 			isa = PBXGroup;
 			children = (
@@ -957,6 +969,7 @@
 				BAF4EF611CD1B20500C3931B /* RWAnswerViewController.m */,
 				12FFF0B81CCF1A3A003F58E2 /* RWErrorSubjectsController.h */,
 				12FFF0B91CCF1A3A003F58E2 /* RWErrorSubjectsController.m */,
+				12BCD7EA1D0EE7E2008DA5DC /* View */,
 			);
 			name = SubjectView;
 			sourceTree = "<group>";
@@ -1568,6 +1581,7 @@
 				12FFF1381CCF3C63003F58E2 /* MagicalRecord+Actions.m in Sources */,
 				12FFF0E21CCF3691003F58E2 /* RWDataBaseManager.m in Sources */,
 				12EE61C01CE181AD00ADCC51 /* NSData+Base64.m in Sources */,
+				12BCD7E91D0EA93B008DA5DC /* RWProgressCell.m in Sources */,
 				BAF3C5971CD49F4300D66B03 /* RWCollectHub.m in Sources */,
 				12FFF13A1CCF3C63003F58E2 /* MagicalRecord+iCloud.m in Sources */,
 				BA8C56781CD0F1C900CB33B8 /* RWCarouselImageCell.m in Sources */,

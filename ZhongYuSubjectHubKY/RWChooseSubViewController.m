@@ -7,7 +7,7 @@
 //
 
 #import "RWChooseSubViewController.h"
-#import "RWSubjectHubListCell.h"
+#import "RWProgressCell.h"
 #import "RWAnswerViewController.h"
 #import "RWDataBaseManager.h"
 
@@ -40,7 +40,6 @@ static NSString *const classList = @"classList";
     self.tabBarController.tabBar.translucent = NO;
     self.navigationController.navigationBar.titleTextAttributes = @{NSForegroundColorAttributeName: [UIColor whiteColor]};
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
-    
     sujectClasses = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, 0, 0) style:UITableViewStylePlain];
     
     [self.view addSubview:sujectClasses];
@@ -61,7 +60,7 @@ static NSString *const classList = @"classList";
     
     sujectClasses.bounces = NO;
     
-    [sujectClasses registerClass:[RWSubjectHubListCell class] forCellReuseIdentifier:classList];
+    [sujectClasses registerClass:[RWProgressCell class] forCellReuseIdentifier:classList];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -95,23 +94,22 @@ static NSString *const classList = @"classList";
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
     
-    RWSubjectHubListCell *cell = [tableView dequeueReusableCellWithIdentifier:classList forIndexPath:indexPath];
+    RWProgressCell *cell = [tableView dequeueReusableCellWithIdentifier:classList forIndexPath:indexPath];
     
     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     
-    cell.title = [_classSource[indexPath.row] valueForKey:@"subjectclass"];
+    cell.name = [_classSource[indexPath.row] valueForKey:@"subjectclass"];
     
-    cell.downLoadState = [baseManager toSubjectsWithIndexName:[_classSource[indexPath.row] valueForKey:@"subjectclass"] AndHubName:[_classSource[indexPath.row] valueForKey:@"hub"] Type:RWToNumberForString];
+    cell.fraction = [baseManager toSubjectsWithIndexName:[_classSource[indexPath.row] valueForKey:@"subjectclass"] AndHubName:[_classSource[indexPath.row] valueForKey:@"hub"] Type:RWToNumberForString];
     
     return cell;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    
-    return 50;
+    return 80;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath

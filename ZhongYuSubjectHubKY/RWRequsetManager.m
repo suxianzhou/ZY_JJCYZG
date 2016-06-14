@@ -600,7 +600,10 @@
     
     UIAlertAction *registerAction = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
         
-        click();
+        if (click)
+        {
+            click();
+        }
     }];
     
     [alert addAction:registerAction];

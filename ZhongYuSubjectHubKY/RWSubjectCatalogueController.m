@@ -13,6 +13,8 @@
 #import <SVProgressHUD.h>
 #import "RWAnswerViewController.h"
 #import "RWRequsetManager.h"
+#import "RWErrorSubjectsController.h"
+#import "RWProgressCell.h"
 
 @interface RWSubjectCatalogueController ()
 
@@ -43,6 +45,8 @@
 
 static NSString *const hubList = @"hunList";
 
+static NSString *const progressCell = @"ProgressCell";
+
 @implementation RWSubjectCatalogueController
 
 @synthesize subjectHubList;
@@ -60,21 +64,71 @@ static NSString *const hubList = @"hunList";
     
     self.navigationController.navigationBar.titleTextAttributes = @{NSForegroundColorAttributeName:[UIColor whiteColor]};
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
-    
-    [self initSegmentedControl];
 }
 
 - (void)initSegmentedControl
 {
-    UISegmentedControl *segmented =
-                [[UISegmentedControl alloc] initWithItems:@[@"题目练习",@"错题记录"]];
+    UISegmentedControl *segmented = (UISegmentedControl *)[self.navigationController.view viewWithTag:30];
+    
+    if (segmented)
+    {
+        return;
+    }
+    
+    segmented = [[UISegmentedControl alloc] initWithItems:@[@"题目练习",@"错题记录"]];
+    
+    segmented.tag = 30;
     
     segmented.frame = CGRectMake(0, 0, 200.0, 30.0);
     segmented.center = CGPointMake(self.navigationController.navigationBar.frame.size.width / 2, self.navigationController.navigationBar.frame.size.height /2);
     segmented.selectedSegmentIndex = 2;
     segmented.tintColor = [UIColor whiteColor];
     
+    if ([[self.navigationController.viewControllers lastObject]
+                                                        isKindOfClass:[self class]])
+    {
+        segmented.selectedSegmentIndex = 0;
+    }
+    else
+    {
+        segmented.selectedSegmentIndex = 1;
+    }
+    
+    [segmented addTarget:self action:@selector(segmentedClick:) forControlEvents:UIControlEventValueChanged];
+    
     [self.navigationController.navigationBar addSubview:segmented];
+}
+
+-(void)segmentedClick:(UISegmentedControl *)segmented
+{
+    if (segmented.selectedSegmentIndex == 0)
+    {
+        id controller = [self.navigationController.viewControllers lastObject];
+        
+        if ([controller isKindOfClass:[RWErrorSubjectsController class]])
+        {
+            [self.navigationController popViewControllerAnimated:YES];
+        }
+    }
+    else
+    {
+        id controller = [self.navigationController.viewControllers lastObject];
+        
+        if ([controller isKindOfClass:[self class]])
+        {
+            RWErrorSubjectsController *errorController =
+                                            [[RWErrorSubjectsController alloc] init];
+            
+            [self.navigationController pushViewController:errorController
+                                                 animated:YES];
+        }
+    }
+}
+- (void)releaseSegmentedControl
+{
+    UISegmentedControl *segmented = (UISegmentedControl *)[self.navigationController.view viewWithTag:30];
+    
+    [segmented removeFromSuperview];
 }
 
 #pragma mark - Version > iOS 8_0
@@ -213,30 +267,76 @@ static NSString *const hubList = @"hunList";
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-
-    RWSubjectHubListCell *cell = [tableView dequeueReusableCellWithIdentifier:hubList forIndexPath:indexPath];
-        
-    cell.title = [subjectSource[indexPath.section][indexPath.row] valueForKey:@"title"];
-        
-    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-        
-    cell.selectionStyle = UITableViewCellSelectionStyleNone;
-        
+    
     if ([baseManager isExistHubWithHubName:[subjectSource[indexPath.section][indexPath.row] valueForKey:@"title"]])
     {
-        cell.downLoadState = @"已下载";
-    }
-        else
-        {
-            cell.downLoadState = @"未下载";
-        }
+        RWProgressCell *cell = [tableView dequeueReusableCellWithIdentifier:progressCell forIndexPath:indexPath];
+        
+        cell.name = [subjectSource[indexPath.section][indexPath.row] valueForKey:@"title"];
+        
+        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        
+        cell.fraction = [self fractionWithRow:indexPath.row
+                                      Section:indexPath.section];
         
         return cell;
+    }
+    else
+    {
+        RWSubjectHubListCell *cell = [tableView dequeueReusableCellWithIdentifier:hubList forIndexPath:indexPath];
+        
+        cell.title = [subjectSource[indexPath.section][indexPath.row] valueForKey:@"title"];
+        
+        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        
+        cell.downLoadState = @"未下载";
+        
+        return cell;
+    }
+}
+
+- (NSString *)fractionWithRow:(NSInteger)row Section:(NSInteger)section
+{
+    NSString *name = [subjectSource[section][row] valueForKey:@"title"];
+    
+    NSArray *items = [baseManager obtainIndexNameWithHub:name];
+    
+    unsigned int makes = 0,counts = 0;
+    
+    for (int i = 0; i < items.count; i++)
+    {
+        RWSubjectClassModel *item = items[i];
+        
+        NSString *itemfra = [baseManager toSubjectsWithIndexName:item.subjectclass
+                                                      AndHubName:item.hub
+                                                            Type:RWToNumberForString];
+        
+        NSArray *arr = [itemfra componentsSeparatedByString:@"/"];
+        
+        if (arr.count != 2)
+        {
+            return nil;
+        }
+        
+        makes += [arr[0] intValue];
+        counts += [arr[1] intValue];
+    }
+    
+    return [NSString stringWithFormat:@"%d/%d",makes,counts];
 }
 
 #pragma mark - UITableViewDelegate
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    if ([baseManager isExistHubWithHubName:[subjectSource[indexPath.section][indexPath.row] valueForKey:@"title"]])
+    {
+        return 80;
+    }
     
     return 50;
 }
@@ -302,6 +402,8 @@ static NSString *const hubList = @"hunList";
         
         choose.classSource = [baseManager obtainIndexNameWithHub:selectTitle];
         
+        [self releaseSegmentedControl];
+        
         [self.navigationController pushViewController:choose animated:YES];
         
         [SVProgressHUD dismiss];
@@ -317,6 +419,8 @@ static NSString *const hubList = @"hunList";
     choose.classSource = subjectHubs;
     
     [SVProgressHUD dismiss];
+    
+    [self releaseSegmentedControl];
     
     [self.navigationController pushViewController:choose animated:YES];
 }
@@ -351,12 +455,18 @@ static NSString *const hubList = @"hunList";
     subjectHubList.delegate   = self;
     subjectHubList.dataSource = self;
     
-    [subjectHubList registerClass:[RWSubjectHubListCell class] forCellReuseIdentifier:hubList];
+    [subjectHubList registerClass:[RWSubjectHubListCell class]
+           forCellReuseIdentifier:hubList];
+    
+    [subjectHubList registerClass:[RWProgressCell class]
+           forCellReuseIdentifier:progressCell];
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
+    
+    [self initSegmentedControl];
     
     if (!subjectClassSource) {
         

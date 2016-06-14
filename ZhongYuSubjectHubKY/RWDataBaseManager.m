@@ -345,7 +345,7 @@
 
         subjuecClass.uploaddate           = [indexNames[i] valueForKey:@"uploaddate"];
 
-        subjuecClass.subjectclass         = [indexNames[i] valueForKey:@"subjectclass"];
+        subjuecClass.subjectclass       = [indexNames[i] valueForKey:@"subjectclass"];
 
         [mArr addObject:subjuecClass];
         
