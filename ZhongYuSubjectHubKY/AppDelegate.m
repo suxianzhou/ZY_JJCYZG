@@ -16,8 +16,8 @@
 #import "UMCommunity.h"
 
 
-#define UMengCommunityAppkey @"57316e8167e58e28c4000286" //test
-#define UMengCommunityAppSecret @"2513ee6b3bd2867c727b7134c6891c42"
+#define UMengCommunityAppkey @"57528da2e0f55a1c91001ff0" //test
+#define UMengCommunityAppSecret @"17f067fc0fb758202ca2e50643c4429b"
 @interface AppDelegate ()
 
 @end
